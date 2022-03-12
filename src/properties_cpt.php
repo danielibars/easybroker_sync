@@ -33,7 +33,7 @@ function property_cpt() {
 		'label'                 => __( 'Propiedad', 'ibars_easybroker_sync' ),
 		'description'           => __( 'Propiedades de EasyBroker', 'ibars_easybroker_sync' ),
 		'labels'                => $labels,
-		'supports'              => array( 'title', 'custom-fields' ),
+		'supports'              => array( 'title', 'custom-fields','thumbnail' ),
 		'taxonomies'            => array( 'category', 'post_tag' ),
 		'hierarchical'          => false,
 		'public'                => true,
