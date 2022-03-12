@@ -13,7 +13,7 @@ require_once __DIR__ . '/src/activation.php';
 require_once __DIR__ . '/src/settings_menu.php';
 require_once __DIR__ . '/src/easybroker_api.php';
 require_once __DIR__ . '/src/properties_cpt.php';
-$POST_TYPE = "at_biz_dir";
+
 
 
 
@@ -65,32 +65,24 @@ function easybroker_sync_process() {
 
 
         $my_meta = array(
-            "_custom-text"=>$property['public_id'],
-            "_edit_lock"=>"",
-            "_directory_type"=>3,
-            "_edit_last"=>get_option('easybroker_sync_author_id'),
-            "_atbd_listing_pricing"=>"",
-            "_price"=>$amount,
-            "_custom-text-2"=>$formatted_amount,
-            "_custom-select"=>$currency,
-            "_image"=>$property['title_image_full'],
-            "_price_range"=>"",
-            "_tax_input[at_biz_dir-location][]"=>"",
-            "_tax_input[at_biz_dir-tags][]"=>"",
-            "_admin_category_select[]"=>"",
-            "_atbdp_post_views_count"=>"",
-            "_manual_lat"=>"",
-            "_hide_map"=>"",
-            "_manual_lng"=>"",
-            "_map"=>"",
-            "_listing_img"=>"",
-            "_listing_prv_img"=>"",
-            "_tagline"=>"",
-            "_address"=>$property['location'],
-            "_featured"=>"",
-            "_never_expire"=>1,
-            "_expiry_date"=>"",
-            "_listing_status"=>"post_status"
+            "public_id"=>$property['public_id'],
+            "title_image_full"=>$property['title_image_full'],
+            "title_image_thumb"=>$property['title_image_thumb'],
+            "location"=>$property['location'],
+            "operation_type"=>$property['operations'][0]['type'],
+            "operation_amount"=>$amount,
+            "operation_currency"=>$currency,
+            "operation_formatted_amount"=>$formatted_amount,
+            "bedrooms"=>$property['bedrooms'],
+            "bathrooms"=>$property['bathrooms'],
+            "parking_spaces"=>$property['parking_spaces'],
+            "property_type"=>$property['property_type'],
+            "lot_size"=>$property['lot_size'],
+            "construction_size"=>$property['construction_size'],
+            "agent"=>$property['agent'],
+            "show_prices"=>$property['show_prices']
+
+            
         );
         foreach($my_meta as $meta_key => $meta_value){
             if ( ! add_post_meta( $post_id, $meta_key, $meta_value, true ) ) { 
