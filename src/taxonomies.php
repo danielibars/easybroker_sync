@@ -90,3 +90,51 @@ if ( ! function_exists( 'property_custom_tags' ) ) {
 	add_action( 'init', 'property_custom_tags', 0 );
 	
 	}
+
+
+
+
+	if ( ! function_exists( 'property_custom_location' ) ) {
+
+		// Register categorias de propiedad
+		function property_custom_location() {
+		
+			$labels = array(
+				'name'                       => _x( 'Ubicacion', 'Taxonomy General Name', 'ibars-easybroker' ),
+				'singular_name'              => _x( 'Ubicacion', 'Taxonomy Singular Name', 'ibars-easybroker' ),
+				'menu_name'                  => __( 'Ubicacion', 'ibars-easybroker' ),
+				'all_items'                  => __( 'Todas las ubicaciones', 'ibars-easybroker' ),
+				'parent_item'                => __( 'Ubicacion padre', 'ibars-easybroker' ),
+				'parent_item_colon'          => __( 'Parent Item:', 'ibars-easybroker' ),
+				'new_item_name'              => __( 'New Item Name', 'ibars-easybroker' ),
+				'add_new_item'               => __( 'Add New Item', 'ibars-easybroker' ),
+				'edit_item'                  => __( 'Edit Item', 'ibars-easybroker' ),
+				'update_item'                => __( 'Update Item', 'ibars-easybroker' ),
+				'view_item'                  => __( 'View Item', 'ibars-easybroker' ),
+				'separate_items_with_commas' => __( 'Separate items with commas', 'ibars-easybroker' ),
+				'add_or_remove_items'        => __( 'Add or remove items', 'ibars-easybroker' ),
+				'choose_from_most_used'      => __( 'Choose from the most used', 'ibars-easybroker' ),
+				'popular_items'              => __( 'Popular Items', 'ibars-easybroker' ),
+				'search_items'               => __( 'Search Items', 'ibars-easybroker' ),
+				'not_found'                  => __( 'Not Found', 'ibars-easybroker' ),
+				'no_terms'                   => __( 'No items', 'ibars-easybroker' ),
+				'items_list'                 => __( 'Items list', 'ibars-easybroker' ),
+				'items_list_navigation'      => __( 'Items list navigation', 'ibars-easybroker' ),
+			);
+			$args = array(
+				'labels'                     => $labels,
+				'hierarchical'               => true,
+				'public'                     => true,
+				'show_ui'                    => true,
+				'show_admin_column'          => true,
+				'show_in_nav_menus'          => true,
+				'show_tagcloud'              => true,
+				'show_in_rest'               => true,
+				'rest_base'                  => 'property_location',
+			);
+			register_taxonomy( 'property_location', array( 'property' ), $args );
+		
+		}
+		add_action( 'init', 'property_custom_location', 0 );
+		
+		}
