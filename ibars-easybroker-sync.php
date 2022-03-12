@@ -80,7 +80,8 @@ function easybroker_sync_process() {
             "lot_size"=>$property['lot_size'],
             "construction_size"=>$property['construction_size'],
             "agent"=>$property['agent'],
-            "show_prices"=>$property['show_prices']
+            "show_prices"=>$property['show_prices'],
+            "fifu_image_url"=>$property['title_image_full']
 
             
         );
