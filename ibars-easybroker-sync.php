@@ -12,6 +12,7 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 require_once __DIR__ . '/src/settings_menu.php';
 require_once __DIR__ . '/src/easybroker_api.php';
 require_once __DIR__ . '/src/properties_cpt.php';
+require_once __DIR__ . '/src/taxonomies.php';
 
 // Activación del Plugin
 register_activation_hook( __FILE__, 'ibars_plugin_activation' );
