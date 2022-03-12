@@ -18,7 +18,7 @@ function display_ebs_options(){
 	<form method="post" action="options.php">';
 			
 		settings_fields( 'ebs_settings' ); // settings group name
-		do_settings_sections( 'ebs-slug' ); // just a page slug
+		do_settings_sections( 'ebs-plugin-options' ); // just a page slug
 		submit_button();
 
 	echo '</form></div>';
@@ -26,24 +26,19 @@ function display_ebs_options(){
 }
 
 add_action('admin_init', function (){
-    register_setting(
-        'ebs_settings',
-        'easy_broker_api_key',
-        'sanitize_text_field'
-    );
-
+    
     add_settings_section(
         'some_settings_section_id',
         '',
         '',
-        'ebs-slug'
+        'ebs-plugin-options'
     );
 
     add_settings_field(
-        'easy_broker_api_key',
+        'easybroker_sync_api_key',
         'EasyBroker API Key',
-        'ebs_text_field_html',
-        'ebs-slug',
+        'ebs_api_field_html',
+        'ebs-plugin-options',
         'some_settings_section_id',
         array(
             'label_for' => 'easy_broker_api_key',
@@ -51,12 +46,45 @@ add_action('admin_init', function (){
         )
     );
 
+    add_settings_field(
+        'easybroker_sync_author_id',
+        'Author ID',
+        'ebs_author_field_html',
+        'ebs-plugin-options',
+        'some_settings_section_id',
+        array(
+            'label_for' => 'easy_broker_author_id',
+            'class' => 'ebs-class'
+        )
+    );
+
+
+
+    register_setting(
+        'ebs_settings',
+        'easybroker_sync_api_key'
+    );
+
+    register_setting(
+        'ebs_settings',
+        'easybroker_sync_author_id'
+    );
+
+
 });
 
-function ebs_text_field_html(){
-    $text = get_option('easy_broker_api_key');
+function ebs_api_field_html(){
+    $text = get_option('easybroker_sync_api_key');
     printf(
-        '<input type="password" id="easy_broker_api_key" name="easy_broker_api_key" value="%s" />',
+        '<input type="password" id="easybroker_sync_api_key" name="easybroker_sync_api_key" value="%s" />',
+		esc_attr( $text )
+    );
+}
+
+function ebs_author_field_html(){
+    $text = get_option('easybroker_sync_author_id');
+    printf(
+        '<input type="number" id="easybroker_sync_author_id" name="easybroker_sync_author_id" value="%s" />',
 		esc_attr( $text )
     );
 }
