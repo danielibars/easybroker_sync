@@ -21,7 +21,7 @@ function get_all_properties(){
     $next = "next";
     $results = array();
     do{
-        error_log($ebs_url);
+        //error_log($ebs_url);
         $file = json_decode(file_get_contents($ebs_url, false, $context), true);
         $ebs_url = $file['pagination']['next_page'];
         

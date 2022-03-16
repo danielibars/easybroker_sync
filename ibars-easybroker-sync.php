@@ -13,6 +13,7 @@ require_once __DIR__ . '/src/settings_menu.php';
 require_once __DIR__ . '/src/easybroker_api.php';
 require_once __DIR__ . '/src/properties_cpt.php';
 require_once __DIR__ . '/src/taxonomies.php';
+require_once __DIR__ . '/src/wp_utils.php';
 
 // Activación del Plugin
 register_activation_hook( __FILE__, 'ibars_plugin_activation' );
@@ -32,10 +33,9 @@ function ibars_plugin_desativation() {
 // Acción personalizada
 add_action( 'easybroker_sync_cron_hook', 'easybroker_sync_process' );
 function easybroker_sync_process() {
-
+        
 	$properties = get_all_properties();
-
-
+    
     // Insertar Actualizar
     foreach($properties as $property ){
         //Buscar el post_id desde public_id
@@ -56,12 +56,13 @@ function easybroker_sync_process() {
         if (count($posts) > 0){ //Si lo encuentro hago update
             $post = $posts[0];
             $my_post['ID'] = $post->ID;
-            error_log("UPDATE: ".$property['public_id']." - ".$post->ID);
+            //error_log("UPDATE: ".$property['public_id']." - ".$post->ID);
         } else{ //Si no lo encuentro hago insert
-            error_log("INSERT: ".$property['public_id']);
+            //error_log("INSERT: ".$property['public_id']);
         }
         $post_id = wp_insert_post($my_post);
-
+        $location = location_ids($property['location']);
+        wp_set_object_terms( $post_id, $location, 'property_location' );
 
         /// Manejo del precio USD and MXN
         $precio_dolar = 20;
