@@ -58,7 +58,17 @@ add_action('admin_init', function (){
         )
     );
 
-
+    add_settings_field(
+        'easybroker_sync_tag_filter',
+        'Filter by tag',
+        'ebs_tag_filter_field_html',
+        'ebs-plugin-options',
+        'some_settings_section_id',
+        array(
+            'label_for' => 'easy_broker_tag_filter',
+            'class' => 'ebs-class'
+        )
+    );
 
     register_setting(
         'ebs_settings',
@@ -68,6 +78,11 @@ add_action('admin_init', function (){
     register_setting(
         'ebs_settings',
         'easybroker_sync_author_id'
+    );
+
+    register_setting(
+        'ebs_settings',
+        'easybroker_sync_tag_filter'
     );
 
 
@@ -85,6 +100,14 @@ function ebs_author_field_html(){
     $text = get_option('easybroker_sync_author_id');
     printf(
         '<input type="number" id="easybroker_sync_author_id" name="easybroker_sync_author_id" value="%s" />',
+		esc_attr( $text )
+    );
+}
+
+function ebs_tag_filter_field_html(){
+    $text = get_option('easybroker_sync_tag_filter');
+    printf(
+        '<input type="text" id="easybroker_sync_tag_filter" name="easybroker_sync_tag_filter" value="%s" />',
 		esc_attr( $text )
     );
 }
