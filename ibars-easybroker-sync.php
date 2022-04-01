@@ -44,7 +44,7 @@ function easybroker_sync_process()
     $all_public_ids = array();
     foreach ($properties as $property) {
         //Buscar el post_id desde public_id
-        $all_public_ids[]=$property['public_id'];
+        $all_public_ids[] = $property['public_id'];
         error_log(print_r($property, true));
 
 
@@ -56,7 +56,7 @@ function easybroker_sync_process()
         $my_post = array(
             'post_title' => ucwords(strtolower(preg_replace('/^\s+|\s+$|\s+(?=\s)/', '', $property['title']))),
             'post_type' => 'property',
-            'post_content'=>$property['ebs_details']['description'],
+            'post_content' => $property['ebs_details']['description'],
             'post_status' => 'publish',
             'post_author'   => get_option('easybroker_sync_author_id')
         );
@@ -70,6 +70,16 @@ function easybroker_sync_process()
 
 
         $post_id = wp_insert_post($my_post);
+
+        // Manejo de la imagen destacada
+
+        if (!has_post_thumbnail($post_id)) {
+            include_once("src/wp_insert_attachment_from_url.php");
+            $imageurl = explode("?",$property['title_image_full'])[0];
+            $attach_id = wp_insert_attachment_from_url($imageurl, $post_id);
+            set_post_thumbnail($post_id, $attach_id);
+        }
+
         $location = location_ids($property['location']);
         wp_set_object_terms($post_id, $location, 'property_location');
 
@@ -87,26 +97,35 @@ function easybroker_sync_process()
 
 
         $my_meta = array(
-            "public_id" => $property['public_id'],
-            "title_image_full" => $property['title_image_full'],
-            "title_image_thumb" => $property['title_image_thumb'],
+            "age" => $property['ebs_details']['age'],
+            "agent" => $property['agent'],
+            "bathrooms" => $property['bathrooms'],
+            "bedrooms" => $property['bedrooms'],
+            "construction_size" => $property['construction_size'],
+            "floors" => $property['ebs_details']['floors'],
+            "half_bathrooms" => $property['ebs_details']['half_bathrooms'],
+            "internal_id" => $property['ebs_details']['internal_id'],
+            "latitude" => $property['ebs_details']['location']['latitude'],
             "location" => $property['location'],
-            "operation_type" => $property['operations'][0]['type'],
+            "longitude" => $property['ebs_details']['location']['longitude'],
+            "property_images" => $property['ebs_details']['property_images'],
+            "lot_length" => $property['ebs_details']['lot_length'],
+            "lot_size" => $property['lot_size'],
+            "lot_width" => $property['ebs_details']['lot_width'],
             "operation_amount" => $amount,
             "operation_currency" => $currency,
             "operation_formatted_amount" => $formatted_amount,
-            "bedrooms" => $property['bedrooms'],
-            "bathrooms" => $property['bathrooms'],
+            "operation_type" => $property['operations'][0]['type'],
             "parking_spaces" => $property['parking_spaces'],
             "property_type" => $property['property_type'],
-            "lot_size" => $property['lot_size'],
-            "construction_size" => $property['construction_size'],
-            "agent" => $property['agent'],
+            "public_id" => $property['public_id'],
             "show_prices" => $property['show_prices'],
-            "fifu_image_url" => $property['title_image_full']
-
-
+            "title_image_full" => $property['title_image_full'],
+            "title_image_thumb" => $property['title_image_thumb'],
+            "features" => $property['ebs_details']['features'],
+            "property_images" => $property['ebs_details']['property_images']
         );
+
         foreach ($my_meta as $meta_key => $meta_value) {
             if (!add_post_meta($post_id, $meta_key, $meta_value, true)) {
                 update_post_meta($post_id, $meta_key, $meta_value);
@@ -118,22 +137,17 @@ function easybroker_sync_process()
     $args = array(
         'numberposts' => -1,
         'post_type'   => 'property'
-      );
-    $wp_properties = get_posts( $args );
-    foreach($wp_properties as $wp_prop){
-       $pub_id = get_post_meta($wp_prop->ID,'public_id', true); 
-       if (in_array($pub_id, $all_public_ids)){
-           error_log("post OK");
-       }else{
-           error_log("POST DELETED:", $wp_prop->ID);
-           wp_delete_post($wp_prop->ID, true);
-       }
-
+    );
+    $wp_properties = get_posts($args);
+    foreach ($wp_properties as $wp_prop) {
+        $pub_id = get_post_meta($wp_prop->ID, 'public_id', true);
+        if (in_array($pub_id, $all_public_ids)) {
+            error_log("post OK");
+        } else {
+            error_log("POST DELETED:", $wp_prop->ID);
+            wp_delete_post($wp_prop->ID, true);
+        }
     }
-
-
-
-
 }
 
 
@@ -146,4 +160,22 @@ function ibars_my_custom_schedule($schedules)
         'display' => __('Dos veces por día', 'ibars_lang_domain')
     );
     return $schedules;
+}
+
+
+
+//External image
+// Add External Link to Featured Image with Custom Field
+
+add_filter('post_thumbnail_html', 'add_external_link_on_page_post_thumbnail', 10);
+function add_external_link_on_page_post_thumbnail($html)
+{
+
+    global $post;
+    $name = get_post_meta($post->ID, 'title_image_full', true);
+    if ($name) {
+        $html = '<a href="' . ($name) . '" target="_blank" >' . $html . '</a>';
+    }
+
+    return $html;
 }
