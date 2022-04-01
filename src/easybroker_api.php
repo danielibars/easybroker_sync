@@ -39,7 +39,7 @@ function get_all_properties()
         $property_url = $ebs_url . "/" . $property['public_id'];
         error_log("PROPERTY_URL: -" . $property_url . "-");
         $p = json_decode(file_get_contents($property_url, false, $context), true);
-        error_log("THIS_ARE_THE_TAGS: " . print_r($p['tags'], true));
+        //error_log("THIS_ARE_THE_TAGS: " . print_r($p['tags'], true));
         if (get_option('easybroker_sync_tag_filter') && get_option('easybroker_sync_tag_filter') != '' && in_array(get_option('easybroker_sync_tag_filter'), $p['tags'])) {
             $property['ebs_details'] = $p;
             $las_propiedades[] =  $property;
