@@ -78,44 +78,6 @@ function easybroker_sync_process()
             $imageurl = explode("?",$property['title_image_full'])[0];
             $attach_id = wp_insert_attachment_from_url($imageurl, $post_id);
             set_post_thumbnail($post_id, $attach_id);
-            // include_once(ABSPATH . 'wp-admin/includes/image.php');
-            // $imageurl = explode("?",$property['title_image_full'])[0];
-            // $filename = basename($imageurl);
-            // $uploaddir = wp_upload_dir();
-            // $uploadfile = $uploaddir['path'] . '/' . $filename;
-            // $contents = file_get_contents($imageurl);
-            // $savefile = fopen($uploadfile, 'w');
-            // fwrite($savefile, $contents);
-            // fclose($savefile);
-
-            // $wp_filetype = wp_check_filetype(basename($filename), null);
-            // error_log(print_r($wp_filetype, true));
-            
-            // error_log("###################################");
-            // error_log("Filename: $filename");
-            // error_log("Uploaddir:");
-            // error_log(print_r($uploaddir, true));
-            // error_log("Uploadfile: $uploadfile");
-            // error_log("###################################");
-            
-            // $attachment = array(
-            //     'guid'=> $uploaddir['url']."/".$filename,
-            //     'post_mime_type' => $wp_filetype['type'],
-            //     'post_title' => $filename,
-            //     'post_content' => '',
-            //     'post_status' => 'inherit',
-            //     'post_author' => get_option('easybroker_sync_author_id'),
-            // );
-
-            // // Insert the attachment.
-            // $attach_id = wp_insert_attachment($attachment, $filename, $post_id);
-
-            
-            // // Generate the metadata for the attachment, and update the database record.
-            // $attach_data = wp_generate_attachment_metadata($attach_id, $filename);
-            // wp_update_attachment_metadata($attach_id, $attach_data);
-
-            // set_post_thumbnail($post_id, $attach_id);
         }
 
         $location = location_ids($property['location']);
