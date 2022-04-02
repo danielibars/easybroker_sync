@@ -83,6 +83,12 @@ function easybroker_sync_process()
         $location = location_ids($property['location']);
         wp_set_object_terms($post_id, $location, 'property_location');
 
+        //Manejo de property_type
+        $property_type = property_type($property['property_type']);
+        error_log("Para $post_id se inserta el property_type: $property_type");
+        $result_property_type = wp_set_object_terms($post_id, $property_type, 'property_type');
+        error_log("$result_property_type");
+
         /// Manejo del precio USD and MXN
         $precio_dolar = 20;
         $amount = $property['operations'][0]['amount'];

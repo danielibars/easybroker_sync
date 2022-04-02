@@ -4,7 +4,7 @@ function get_all_properties()
 {
     // get an option
     $apikey = get_option('easybroker_sync_api_key');
-    error_log("getting API KEY");
+    
 
     // Create a stream
     $opts = array(
