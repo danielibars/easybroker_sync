@@ -37,14 +37,14 @@ function location_ids($location_string){
 
 }
 
-function property_type($property_type){
-    error_log("property_type: $property_type");
+function attach_term($term, $category){
+    error_log("$term: $category");
     $id = (array) wp_insert_term(
-        $property_type,
-        "property_type",
+        $term,
+        $category,
         array(
-            "description"=>$property_type,
-            "slug"=>slugify($property_type)
+            "description"=>$term,
+            "slug"=>slugify($term)
         )
 
     );
