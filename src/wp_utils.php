@@ -5,17 +5,12 @@ function slugify($string){
     return $slug;
 }
 
-function location_ids($location_string){
-
-    error_log("UBICACION: $location_string");
+function location_ids($location_string){   
     $locations = explode(", ", $location_string);
     $the_parent=0;
     $ids = array();
+
     foreach(array_reverse($locations) as $location){
-        error_log("beforetrim: $location");
-
-       
-
         $parent = (array) wp_insert_term(
             $location,   // the term 
             'property_location', // the taxonomy
@@ -25,7 +20,7 @@ function location_ids($location_string){
                 'parent'      => $the_parent,
             )
         );
-        if (array_key_exists('term_id',$parent)){
+        if (isset($parent['term_id'])){
             error_log("el term fue creado con el id: ".$parent['term_id']);
             $the_parent=$parent['term_id'];
         }elseif(isset($parent['error_data']['term_exists'])){
@@ -36,9 +31,33 @@ function location_ids($location_string){
         error_log("the_parent: ".print_r($the_parent, true));
         $ids[]=$the_parent;
     }
+    
     error_log("ids: ".print_r($ids, true));
     return $ids;
 
+}
+
+function property_type($property_type){
+    error_log("property_type: $property_type");
+    $id = (array) wp_insert_term(
+        $property_type,
+        "property_type",
+        array(
+            "description"=>$property_type,
+            "slug"=>slugify($property_type)
+        )
+
+    );
+    error_log("el ID:".print_r($id,true));
+    if (isset($id['term_id'])){
+        error_log("el term fue creado con el id: ".$id['term_id']);
+        $the_id=$id['term_id'];
+    }elseif(isset($id['error_data']['term_exists'])){
+        error_log("el term ya existía con el id: ".$id['error_data']['term_exists']);
+        $the_id=$id['error_data']['term_exists'];
+    }
+    error_log(print_r($the_id,true));
+    return $the_id;
 }
 
 
