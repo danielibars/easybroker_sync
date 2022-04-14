@@ -11,23 +11,24 @@ function location_ids($location_string){
     $ids = array();
 
     foreach(array_reverse($locations) as $location){
+        error_log("LOCATION: $location");
         $parent = (array) wp_insert_term(
             $location,   // the term 
             'property_location', // the taxonomy
             array(
                 'description' => $location,
-                'slug'        => slugify($location),
-                'parent'      => $the_parent,
+                // 'slug'        => slugify($location),
+                'parent'      => $the_parent
             )
         );
         if (isset($parent['term_id'])){
-            error_log("el term fue creado con el id: ".$parent['term_id']);
+            error_log("el term -$location- fue creado con el id: ".$parent['term_id']);
             $the_parent=$parent['term_id'];
         }elseif(isset($parent['error_data']['term_exists'])){
-            error_log("el term ya existía con el id: ".$parent['error_data']['term_exists']);
+            error_log("el term -$location- ya existía con el id: ".$parent['error_data']['term_exists']);
             $the_parent=$parent['error_data']['term_exists'];
         }
-        error_log("parent: ".print_r($parent['term_id'], true));
+        error_log("parent: ".print_r($parent, true));
         error_log("the_parent: ".print_r($the_parent, true));
         $ids[]=$the_parent;
     }
