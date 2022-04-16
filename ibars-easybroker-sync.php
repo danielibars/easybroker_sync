@@ -105,6 +105,7 @@ function easybroker_sync_process()
         } elseif ($currency == 'MXN') {
             $formatted_amount = $currency . $formatted_amount;
         }
+        
 
 
         $my_meta = array(
@@ -134,7 +135,7 @@ function easybroker_sync_process()
             "title_image_full" => $property['title_image_full'],
             "title_image_thumb" => $property['title_image_thumb'],
             "features" => $property['ebs_details']['features'],
-            "property_images" => $property['ebs_details']['property_images']
+            "property_images" => json_encode( $property['ebs_details']['property_images'])
         );
 
         foreach ($my_meta as $meta_key => $meta_value) {
