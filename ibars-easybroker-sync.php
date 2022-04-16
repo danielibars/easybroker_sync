@@ -135,7 +135,7 @@ function easybroker_sync_process()
             "show_prices" => $property['show_prices'],
             "title_image_full" => $property['title_image_full'],
             "title_image_thumb" => $property['title_image_thumb'],
-            "features" => $property['ebs_details']['features'],
+            "features" => json_encode($property['ebs_details']['features']),
             "property_images" => json_encode( $property['ebs_details']['property_images'])
         );
 
