@@ -120,7 +120,7 @@ function easybroker_sync_process()
             "latitude" => $property['ebs_details']['location']['latitude'],
             "loctation" => $property['location'],
             "longitude" => $property['ebs_details']['location']['longitude'],
-            "lat_lng" => "$property['ebs_details']['location']['latitude'],$property['ebs_details']['location']['longitude']",
+            "lat_lng" => $property['ebs_details']['location']['latitude'].",".$property['ebs_details']['location']['longitude'],
             "property_images" => $property['ebs_details']['property_images'],
             "lot_length" => $property['ebs_details']['lot_length'],
             "lot_size" => $property['lot_size'],
