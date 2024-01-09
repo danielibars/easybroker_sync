@@ -4,7 +4,7 @@ Plugin Name: EasyBroker Sync
 Description: Crea un Custom Post Type y descarga las propiedades de EasyBroker
 Version:     1.0
 Author:      Daniel Ibars Guerrero
-Author URI:  https://www.crowdbarkers.com
+Author URI:  https://www.danielibars.com
 License:     GPL2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 */
@@ -19,6 +19,7 @@ require_once __DIR__ . '/src/wp_utils.php';
 register_activation_hook(__FILE__, 'ibars_plugin_activation');
 function ibars_plugin_activation()
 {
+    error_log("Activando cron");
     if (!wp_next_scheduled('easybroker_sync_cron_hook')) {
         wp_schedule_event(current_time('timestamp'), 'EasyBrokerSync', 'easybroker_sync_cron_hook');
     }
@@ -28,6 +29,7 @@ function ibars_plugin_activation()
 register_deactivation_hook(__FILE__, 'ibars_plugin_desativation');
 function ibars_plugin_desativation()
 {
+    error_log("Desactivando cron");
     wp_clear_scheduled_hook('easybroker_sync_cron_hook');
 }
 
@@ -75,9 +77,14 @@ function easybroker_sync_process()
 
         if (!has_post_thumbnail($post_id)) {
             include_once("src/wp_insert_attachment_from_url.php");
-            $imageurl = explode("?",$property['title_image_full'])[0];
-            $attach_id = wp_insert_attachment_from_url($imageurl, $post_id);
-            set_post_thumbnail($post_id, $attach_id);
+
+            if ($property['title_image_full'] !== null) {
+                $imageurl = explode("?", $property['title_image_full'])[0];
+                $attach_id = wp_insert_attachment_from_url($imageurl, $post_id);
+                set_post_thumbnail($post_id, $attach_id);
+            } else {
+                error_log("No se encontro imagen destacada para: " . $property['public_id']);
+            }
         }
 
         $location = location_ids($property['location']);
@@ -87,7 +94,7 @@ function easybroker_sync_process()
         $property_type = attach_term($property['property_type'], "property_type");
         error_log("Para $post_id se inserta el property_type: $property_type");
         $result_property_type = wp_set_object_terms($post_id, $property_type, 'property_type');
-        error_log("$result_property_type");
+        //error_log("$result_property_type");
 
 
         // Manejo de tags
@@ -105,7 +112,7 @@ function easybroker_sync_process()
         } elseif ($currency == 'MXN') {
             $formatted_amount = $currency . $formatted_amount;
         }
-        
+
 
 
         $my_meta = array(
@@ -120,7 +127,7 @@ function easybroker_sync_process()
             "latitude" => $property['ebs_details']['location']['latitude'],
             "loctation" => $property['location'],
             "longitude" => $property['ebs_details']['location']['longitude'],
-            "lat_lng" => $property['ebs_details']['location']['latitude'].",".$property['ebs_details']['location']['longitude'],
+            "lat_lng" => $property['ebs_details']['location']['latitude'] . "," . $property['ebs_details']['location']['longitude'],
             "property_images" => $property['ebs_details']['property_images'],
             "lot_length" => $property['ebs_details']['lot_length'],
             "lot_size" => $property['lot_size'],
@@ -136,7 +143,7 @@ function easybroker_sync_process()
             "title_image_full" => $property['title_image_full'],
             "title_image_thumb" => $property['title_image_thumb'],
             "features" => json_encode($property['ebs_details']['features']),
-            "property_images" => json_encode( $property['ebs_details']['property_images'])
+            "property_images" => json_encode($property['ebs_details']['property_images'])
         );
 
         foreach ($my_meta as $meta_key => $meta_value) {
