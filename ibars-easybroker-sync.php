@@ -47,7 +47,7 @@ function easybroker_sync_process()
     foreach ($properties as $property) {
         //Buscar el post_id desde public_id
         $all_public_ids[] = $property['public_id'];
-        error_log(print_r($property, true));
+        //error_log(print_r($property, true));
 
 
 
@@ -92,14 +92,25 @@ function easybroker_sync_process()
 
         //Manejo de property_type
         $property_type = attach_term($property['property_type'], "property_type");
-        error_log("Para $post_id se inserta el property_type: $property_type");
+
         $result_property_type = wp_set_object_terms($post_id, $property_type, 'property_type');
-        //error_log("$result_property_type");
 
 
         // Manejo de tags
-        $operation_type_tag = attach_term($property['operations'][0]['type'], "property_tag");
-        $result_operation_type = wp_set_object_terms($post_id, $operation_type_tag, 'property_tag');
+        $tag_terms = array();
+
+        $tag_terms[] = attach_term($property['operations'][0]['type'], "property_tag");
+
+
+        foreach ($property['ebs_details']['tags'] as $tag) {
+
+            $tag_term = attach_term($tag, "property_tag");
+            $tag_terms[] = $tag_term;
+        }
+
+
+
+        $result_operation_type = wp_set_object_terms($post_id, $tag_terms, 'property_tag');
 
         /// Manejo del precio USD and MXN
         $precio_dolar = 20;

@@ -15,7 +15,7 @@ function get_all_properties()
         )
     );
     $context = stream_context_create($opts);
-    error_log("setup HTTP REQUEST");
+
 
     // Open the file using the HTTP headers set above
     error_log("start");
@@ -33,6 +33,10 @@ function get_all_properties()
     error_log("Terminando paginacion");
     error_log("iniciando propiedad por propiedad");
     $las_propiedades = array();
+    // get_option('easybroker_sync_tag_filter') will contain strings separated by commas, I want an array
+    $tag_filter = get_option('easybroker_sync_tag_filter');
+    $tags = explode(',', $tag_filter);
+
     foreach ($results as $property) {
 
         error_log($property['public_id']);
@@ -41,10 +45,10 @@ function get_all_properties()
         $p = json_decode(file_get_contents($property_url, false, $context), true);
         //error_log("THIS_ARE_THE_TAGS: " . print_r($p['tags'], true));
 
-
+        // true if any of the items in $tags is in $p['tags'] or if $tags is empty
         if (
-            (get_option('easybroker_sync_tag_filter') != '' && in_array(get_option('easybroker_sync_tag_filter'), $p['tags']))
-            || get_option('easybroker_sync_tag_filter') == ''
+            ($tag_filter != '' && !empty(array_intersect($tags, $p['tags'])))
+            || $tag_filter == ''
         ) {
             $property['ebs_details'] = $p;
             $las_propiedades[] =  $property;
