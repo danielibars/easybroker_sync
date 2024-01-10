@@ -179,6 +179,7 @@ function easybroker_sync_process()
             wp_delete_post($wp_prop->ID, true);
         }
     }
+    error_log("Terminando cron");
 }
 
 
