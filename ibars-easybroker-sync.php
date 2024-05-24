@@ -136,7 +136,7 @@ function easybroker_sync_process()
             "half_bathrooms" => $property['ebs_details']['half_bathrooms'],
             "internal_id" => $property['ebs_details']['internal_id'],
             "latitude" => $property['ebs_details']['location']['latitude'],
-            "loctation" => $property['location'],
+            "location" => $property['location'],
             "longitude" => $property['ebs_details']['location']['longitude'],
             "lat_lng" => $property['ebs_details']['location']['latitude'] . "," . $property['ebs_details']['location']['longitude'],
             "property_images" => $property['ebs_details']['property_images'],
