@@ -1,0 +1,39 @@
+# docker compose to start wordpress with wp-cli and mysql
+services:
+  wordpress:
+    build: .
+    ports:
+      - "80:80"
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: password
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_URL: http://127.0.0.1
+      WORDPRESS_TITLE: EasyBroker Sync
+      WORDPRESS_ADMIN_USER: admin
+      WORDPRESS_ADMIN_PASSWORD: password
+      WORDPRESS_ADMIN_EMAIL: user@email.com
+      WORDPRESS_DEBUG: 1
+    volumes:
+      - ./:/var/www/html/wp-content/plugins/easybroker-sync
+    depends_on:
+      - db
+    networks:
+      - wordpress
+
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: wordpress
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - wordpress
+    ports:
+      - "3306:3306"
+networks:
+  wordpress:
+volumes:
+  db_data:
