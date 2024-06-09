@@ -6,6 +6,7 @@ function get_all_properties()
     $apikey = get_option('easybroker_sync_api_key');
 
 
+
     // Create a stream
     $opts = array(
         'http' => array(
@@ -35,10 +36,12 @@ function get_all_properties()
     $las_propiedades = array();
     // get_option('easybroker_sync_tag_filter') will contain strings separated by commas, I want an array
     $tag_filter = get_option('easybroker_sync_tag_filter');
+    $isInvertedFilter = get_option('easybroker_sync_negative_filter');
     $tags = explode(',', $tag_filter);
 
-    foreach ($results as $property) {
 
+    foreach ($results as $property) {
+        error_log("isinverted: " . $isInvertedFilter);
         error_log($property['public_id']);
         $property_url = $ebs_url . "/" . $property['public_id'];
         error_log("PROPERTY_URL: -" . $property_url . "-");
@@ -46,12 +49,22 @@ function get_all_properties()
         //error_log("THIS_ARE_THE_TAGS: " . print_r($p['tags'], true));
 
         // true if any of the items in $tags is in $p['tags'] or if $tags is empty
-        if (
-            ($tag_filter != '' && !empty(array_intersect($tags, $p['tags'])))
-            || $tag_filter == ''
-        ) {
-            $property['ebs_details'] = $p;
-            $las_propiedades[] =  $property;
+        if ($isInvertedFilter == "1") {
+            if (
+                ($tag_filter != '' && empty(array_intersect($tags, $p['tags'])))
+                || $tag_filter == ''
+            ) {
+                $property['ebs_details'] = $p;
+                $las_propiedades[] =  $property;
+            }
+        } else {
+            if (
+                ($tag_filter != '' && !empty(array_intersect($tags, $p['tags'])))
+                || $tag_filter == ''
+            ) {
+                $property['ebs_details'] = $p;
+                $las_propiedades[] =  $property;
+            }
         }
     }
 

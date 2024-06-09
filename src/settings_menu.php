@@ -70,6 +70,18 @@ add_action('admin_init', function () {
         )
     );
 
+    add_settings_field(
+        'easybroker_sync_negative_filter',
+        'Negative Filter',
+        'ebs_negative_filter_field_html',
+        'ebs-plugin-options',
+        'some_settings_section_id',
+        array(
+            'label_for' => 'easy_broker_negative_filter',
+            'class' => 'ebs-class'
+        )
+    );
+
     register_setting(
         'ebs_settings',
         'easybroker_sync_api_key'
@@ -83,6 +95,11 @@ add_action('admin_init', function () {
     register_setting(
         'ebs_settings',
         'easybroker_sync_tag_filter'
+    );
+
+    register_setting(
+        'ebs_settings',
+        'easybroker_sync_negative_filter'
     );
 });
 
@@ -102,4 +119,11 @@ function ebs_tag_filter_field_html()
 {
     $text = get_option('easybroker_sync_tag_filter');
     echo '<input type="text" id="easybroker_sync_tag_filter" name="easybroker_sync_tag_filter" value="' . esc_attr($text) . '" /><p>Puedes filtrar las propiedades por tags de easybroker</p>';
+}
+
+function ebs_negative_filter_field_html()
+{
+    $value = get_option('easybroker_sync_negative_filter');
+
+    echo '<input type="checkbox" id="easybroker_sync_negative_filter" name="easybroker_sync_negative_filter" value="1"' . checked(1, $value, false) . '><p>Hacer negativo el Filter by Tag</p>';
 }
